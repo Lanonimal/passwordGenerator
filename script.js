@@ -1,58 +1,58 @@
 const empty = "";
-const uCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const lCase = "abcdefghijklmnopqrstuvwxyz";
-const number = "0123456789";
-const symbol = "!@#%^&*_+|";
+const upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const lowerCase = "abcdefghijklmnopqrstuvwxyz";
+const numbers = "0123456789";
+const symbols = "!@#%^&*_+|";
 
-const pLength = document.getElementById("p-length");
-const upperCase = document.getElementById("p-uppercase");
-const lowerCase = document.getElementById("p-lowercase");
-const pNumber = document.getElementById("p-number");
-const pSymbol = document.getElementById("p-symbol");
+const uppercase = document.getElementById("p-uppercase");
+const lowercase = document.getElementById("p-lowercase");
+const number = document.getElementById("p-number");
+const symbol = document.getElementById("p-symbol");
 const submit = document.getElementById("submit");
 const password = document.getElementById("password");
 const copy = document.getElementById("copy");
+const pLength = document.getElementById("sliderValue")
+let initialPassword = empty // ""
 
-
-const generatePassword = (l, initialPassword) => { //initialPassword wil contain the list of all the character we wanna use
-  let pass= "";
-  for (let i = 0; i<l; i++) {
-    // charAt picks up a letter / element from the array as index specifies
-    // a= "vatsal"
-    // a.charAt(2) --> returns t
-    pass += initialPassword.charAt(Math.floor(Math.random() * initialPassword.length))
-  }
-  console.log(pass)
-  return pass;
+//function that generates a random password
+const generatePassword = (l, initialPassword) => { //l is length selected by user, initialPassword is list of characters we're going to use
+    let pass="";
+    if(uppercase.checked || lowercase.checked || number.checked || symbol.checked){ //user must have at least one option checked, or else the password we generate will be empty.
+        for (let i = 0; i < l; i++){
+            pass += initialPassword.charAt(Math.floor(Math.random() * initialPassword.length)); //charAt returns item from array at given index. 
+        }
+        return pass;
+    } else {
+        alert("Please select at least one type of character for your password.")
+    }
 }
 
 submit.addEventListener("click", () => {
-  let initialPassword = empty; // ""
-  /*
-  if (upperCase.checked) { // .checked is a boolean property
-    initialPassword += uCase;
-  } else {  }
-  if (lowerCase.checked) {
-    initialPassword += lCase;
-  }*/
-  // ternary operators
-  // condition ? code block : do something else
-  
-  upperCase.checked ? (initialPassword += uCase): "";
-  lowerCase.checked ? (initialPassword += lCase) : "";
-  pNumber.checked ? (initialPassword += number) : "";
-  pSymbol.checked ? (initialPassword += symbol) : "";
-  console.log(initialPassword)
-  password.value = generatePassword(pLength.value, initialPassword)
-  
+    // ternary operator: condition ? block of code : do something else
+    uppercase.checked ? (initialPassword += upperCase) : ""; //if uppercase.checked returns true, we add upperCase to the list of characters that our generate function can use.
+    lowercase.checked ? (initialPassword += lowerCase) : "";
+    number.checked ? (initialPassword += numbers) : "";
+    symbol.checked ? (initialPassword += symbols) : "";
+    password.value = generatePassword(pLength.innerHTML, initialPassword);
 })
 
 copy.addEventListener("click", () => {
-  if (password.value == "") {
-    alert("Please generate password!");
-  } else {
-    password.select() // it selects text inside input boxes
-    document.execCommand("copy") // copy, cut, paste // execCommand is deprecated // alternatives -->
-    alert("Password copied to clipboard!");
-  }
+    if (password.value == ""){
+        alert("Please generate a password.");
+    } else {
+        password.select(); //select the text inside our input box
+        document.execCommand("copy"); //copy, cut, paste
+        alert("Password succesfully copied to clipboard");
+    }
 })
+
+//logic for slider
+const slider = document.getElementById("myRange");
+const sliderOutput = document.getElementById("sliderValue");
+sliderOutput.innerHTML = slider.value; //display the default slider value
+slider.oninput = function() {
+    sliderOutput.innerHTML = this.value; //set the current value of the slider //() => not possible here because it cant use this.value?
+};
+
+
+
